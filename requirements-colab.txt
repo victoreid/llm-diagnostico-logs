@@ -1,5 +1,6 @@
-transformers>=4.56
-peft>=0.13
-accelerate>=0.34
+# versoes testadas (o PyTorch com CUDA ja vem instalado no Colab)
+transformers==5.19.0
+peft==0.21.2
+accelerate==1.15.0
 gradio>=4.44
 matplotlib
