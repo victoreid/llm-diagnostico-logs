@@ -18,7 +18,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(__file__))
-from comum import CAMPOS, carregar_modelo, extrair_json, gerar  # noqa: E402
+from comum import CAMPOS, carregar_modelo, extrair_json, gerar_lote  # noqa: E402
 
 CAMPOS_EXATOS = [c for c in CAMPOS if c != "acao_sugerida"]
 
@@ -41,6 +41,7 @@ def main():
     ap.add_argument("--adaptador", default=None)
     ap.add_argument("--teste", default="data/teste.jsonl")
     ap.add_argument("--limite", type=int, default=0)
+    ap.add_argument("--lote", type=int, default=0, help="respostas geradas por vez (padrao: 16 na GPU, 1 na CPU)")
     a = ap.parse_args()
 
     with open(a.teste, encoding="utf-8") as fh:
@@ -56,9 +57,15 @@ def main():
     todos = 0
     reais, previstos, registros = [], [], []
     t0 = time.time()
-    for i, ex in enumerate(teste, 1):
-        bruto = gerar(modelo, tok, ex["entrada"], disp)
-        pred = extrair_json(bruto) or {}
+    lote = a.lote or (1 if disp == "cpu" else 16)
+    brutos = []
+    for k in range(0, len(teste), lote):
+        brutos += gerar_lote(modelo, tok, [e["entrada"] for e in teste[k: k + lote]], disp)
+        print(f"{len(brutos)}/{len(teste)} | {time.time() - t0:.0f}s", flush=True)
+
+    for ex, bruto in zip(teste, brutos):
+        pred = extrair_json(bruto)
+        pred = pred if isinstance(pred, dict) else {}
         validos += bool(pred)
         ok = {c: pred.get(c) == ex["saida"][c] for c in CAMPOS}
         acertos.update(c for c, v in ok.items() if v)
@@ -66,8 +73,6 @@ def main():
         reais.append(ex["saida"]["categoria"])
         previstos.append(pred.get("categoria"))
         registros.append({"entrada": ex["entrada"], "esperado": ex["saida"], "resposta": bruto, "acertos": ok})
-        if i % 10 == 0:
-            print(f"{i}/{len(teste)} | {time.time() - t0:.0f}s", flush=True)
 
     n = len(teste)
     res = {

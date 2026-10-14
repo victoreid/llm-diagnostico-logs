@@ -25,9 +25,18 @@ def escolher_dispositivo():
     return "cpu"
 
 
-def dtype_para(dispositivo):
+def dtype_para(dispositivo, treino=False):
+    """Precisão numérica por placa.
+
+    GPUs Ampere+ (compute 8.x, ex.: RTX 30xx, A100) têm bfloat16 nativo.
+    GPUs mais antigas (ex.: Tesla T4, compute 7.5) só EMULAM bf16, o que é lento:
+    nelas usamos float16 para gerar e float32 para treinar (fp16 puro no AdamW
+    pode estourar/zerar gradientes).
+    """
     if dispositivo == "cuda":
-        return torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
+        if torch.cuda.get_device_capability(0)[0] >= 8:
+            return torch.bfloat16
+        return torch.float32 if treino else torch.float16
     if dispositivo == "xpu":
         return torch.bfloat16
     return torch.float32
@@ -66,6 +75,17 @@ def gerar(modelo, tok, entrada, dispositivo, max_novos=160, temperatura=0.0):
         kwargs.update(do_sample=False)
     out = modelo.generate(**ids, **kwargs)
     return tok.decode(out[0, ids["input_ids"].shape[1]:], skip_special_tokens=True).strip()
+
+
+@torch.no_grad()
+def gerar_lote(modelo, tok, entradas, dispositivo, max_novos=160):
+    """Gera várias respostas de uma vez (muito mais rápido na GPU). Decodificação gulosa."""
+    tok.padding_side = "left"  # modelos decoder-only precisam de padding à esquerda para gerar
+    textos = [tok.apply_chat_template(mensagens(e), tokenize=False, add_generation_prompt=True) for e in entradas]
+    ids = tok(textos, return_tensors="pt", padding=True).to(dispositivo)
+    out = modelo.generate(**ids, max_new_tokens=max_novos, do_sample=False, pad_token_id=tok.pad_token_id or tok.eos_token_id)
+    n = ids["input_ids"].shape[1]
+    return [tok.decode(o[n:], skip_special_tokens=True).strip() for o in out]
 
 
 def extrair_json(texto):

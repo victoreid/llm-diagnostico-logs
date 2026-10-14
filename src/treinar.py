@@ -85,7 +85,7 @@ def main():
         print(f"GPU: {torch.cuda.get_device_name(0)}")
 
     tok = AutoTokenizer.from_pretrained(MODELO_BASE)
-    modelo = AutoModelForCausalLM.from_pretrained(MODELO_BASE, dtype=dtype_para(disp)).to(disp)
+    modelo = AutoModelForCausalLM.from_pretrained(MODELO_BASE, dtype=dtype_para(disp, treino=True)).to(disp)
     cfg = LoraConfig(
         r=a.rank, lora_alpha=a.alpha or 2 * a.rank, lora_dropout=a.dropout, task_type="CAUSAL_LM",
         target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
