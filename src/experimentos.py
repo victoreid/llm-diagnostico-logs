@@ -27,7 +27,11 @@ EXPERIMENTOS = {
 
 def rodar(cmd):
     print("\n>>> " + " ".join(cmd), flush=True)
-    subprocess.run(cmd, check=True)
+    r = subprocess.run(cmd, stderr=subprocess.PIPE, text=True)
+    if r.returncode != 0:
+        # mostra só o fim do erro (o VSCode corta saídas longas no meio)
+        print("\n".join(r.stderr.strip().splitlines()[-15:]))
+        sys.exit(f"Falhou: {' '.join(cmd[1:4])}")
 
 
 def tabela():
