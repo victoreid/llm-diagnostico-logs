@@ -1,0 +1,155 @@
+{
+  "linhas_unicas_rotuladas": 6638,
+  "tamanho": {
+    "treino": 499,
+    "validacao": 53,
+    "teste": 118
+  },
+  "por_categoria": {
+    "acesso_negado": {
+      "treino": 1,
+      "validacao": 0,
+      "teste": 0
+    },
+    "apropriacao_invalida": {
+      "treino": 3,
+      "validacao": 0,
+      "teste": 0
+    },
+    "apropriacao_percentual": {
+      "treino": 32,
+      "validacao": 3,
+      "teste": 8
+    },
+    "cadastro_invalido": {
+      "treino": 3,
+      "validacao": 0,
+      "teste": 0
+    },
+    "conexao_falhou": {
+      "treino": 1,
+      "validacao": 0,
+      "teste": 6
+    },
+    "falha_hilti_item": {
+      "treino": 6,
+      "validacao": 1,
+      "teste": 1
+    },
+    "falha_item": {
+      "treino": 45,
+      "validacao": 5,
+      "teste": 10
+    },
+    "item_ja_existe": {
+      "treino": 7,
+      "validacao": 1,
+      "teste": 10
+    },
+    "item_sem_mapa": {
+      "treino": 45,
+      "validacao": 5,
+      "teste": 10
+    },
+    "item_sem_scancode": {
+      "treino": 3,
+      "validacao": 0,
+      "teste": 1
+    },
+    "limite_requisicoes": {
+      "treino": 23,
+      "validacao": 2,
+      "teste": 3
+    },
+    "movimento_deletado": {
+      "treino": 45,
+      "validacao": 5,
+      "teste": 10
+    },
+    "obra_fora_do_mapa": {
+      "treino": 45,
+      "validacao": 5,
+      "teste": 7
+    },
+    "preco_unitario_ausente": {
+      "treino": 45,
+      "validacao": 5,
+      "teste": 10
+    },
+    "requisicao_rejeitada": {
+      "treino": 1,
+      "validacao": 0,
+      "teste": 0
+    },
+    "retentativa_lote": {
+      "treino": 5,
+      "validacao": 1,
+      "teste": 1
+    },
+    "saldo_insuficiente": {
+      "treino": 45,
+      "validacao": 5,
+      "teste": 10
+    },
+    "sem_apropriacao_orcamento": {
+      "treino": 45,
+      "validacao": 5,
+      "teste": 10
+    },
+    "sem_custo_medio": {
+      "treino": 3,
+      "validacao": 0,
+      "teste": 1
+    },
+    "servidor_indisponivel": {
+      "treino": 45,
+      "validacao": 5,
+      "teste": 10
+    },
+    "timeout": {
+      "treino": 45,
+      "validacao": 5,
+      "teste": 10
+    },
+    "token_hilti": {
+      "treino": 3,
+      "validacao": 0,
+      "teste": 0
+    },
+    "watchdog": {
+      "treino": 3,
+      "validacao": 0,
+      "teste": 0
+    }
+  },
+  "sem_regra_top": [
+    [
+      "[WARNING] Auditor - Erro ao buscar sheetItemId UCN obra N: N Client Error: Not Found for u",
+      2
+    ],
+    [
+      "[WARNING] Auditor - [SIENGE=N] Obra N: sheetItemId UCN nao encontrado — varredura adiciona",
+      2
+    ],
+    [
+      "[WARNING] Auditor - Itens rejeitados (verificar cadastro no Sienge):",
+      1
+    ],
+    [
+      "[WARNING] Auditor - N | ASPIRADOR DE PÓ",
+      1
+    ],
+    [
+      "[ERROR] Auditor - Erro ao ler alocacao item N: N Client Error: Unprocessable Entity for ur",
+      1
+    ],
+    [
+      "[WARNING] Porteiro - Erro na obra N: N Client Error: Not Found for url: <URL_SIENGE>",
+      1
+    ],
+    [
+      "[ERROR] Porteiro - HTTP N ao criar item N",
+      1
+    ]
+  ]
+}
